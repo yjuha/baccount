@@ -6,40 +6,40 @@
 #include "customer_account.h"
 #include "enterprise_account.h"
 
-
 void Banking::help() const {
-    std::cout << "\nOptions:" 
+    std::cout << "\n[MAIN MENU] Options:" 
                     "\na - add an account"
                     "\nr - remove an account"
                     "\nm - modify an account"
                     "\nd - display account details" 
                     "\nl - list all accounts"
-                    "\nq - quit program" << std::endl;
+                    "\nq - quit program\n";
     
-    std::cout << "Enter your option (a/r/m/d/l/q): " << std::endl;
+    std::cout << "\nEnter your option (a/r/m/d/l/q) > ";
 }
-
 void Banking::help_addAccount() const {
-    std::cout << "\nAdd basic (press 'b'), customer ('c'),"
-        " or enterprise ('e') account (cancel by pressing 'q')." << std::endl;
+     std::cout << "\n[ADD ACCOUNT] Options:" 
+                    "\nb - add basic account"
+                    "\nc - add customer account"
+                    "\ne - add enterprise account"
+                    "\nq - return to main menu\n";
+    
+    std::cout << "\nEnter your option (b/c/e/q) > ";
 }
-
 bool Banking::listAccounts() {
+    std::cout << "\n[AVAILABLE ACCOUNTS (listed by ID)]" << std::endl;
+    accountsMap_t::iterator it;
 
-    std::cout << "\nAvailable accounts:" << std::endl;
-    std::map<std::string, BasicAccount*>::iterator it;
-
-    if( allAccountsMap.size() == 0) {
-        std::cout << "DATABASE EMPTY" << std::endl;
+    if( accounts.size() == 0) {
+        std::cout << "** DATABASE EMPTY **" << std::endl;
         return false;
     } else {
-        for (it = allAccountsMap.begin(); it !=allAccountsMap.end(); ++it) {
+        for (it = accounts.begin(); it !=accounts.end(); ++it) {
             std::cout << it->first << std::endl;
         }
         std::cout << "\n";
         return true;
     }
-
 }
 
 void Banking::modifyAccount() {
@@ -47,10 +47,10 @@ void Banking::modifyAccount() {
     if (listAccounts()) {
         bool cont_dowhile = false;
 
-        //collect account id to modify, check if exists
         do
         {
-            std::cout << "Enter account to be modified\n Account ID (press 'q' to cancel): " << "\n";
+            std::cout << "\n[MODIFY ACCOUNT] (press 'q' to cancel)";
+            std::cout << "\nType in account ID > ";
             std::string input_str;
             std::getline(std::cin, input_str);
 
@@ -59,16 +59,16 @@ void Banking::modifyAccount() {
                     cont_dowhile = false;
                 } else {
                     cont_dowhile = true;
-                    std::cout << "The given account ID does not contain five (5) digits." 
-                       "\nTry again (press 'q' to cancel)"  << std::endl;
+                    std::cerr << "\nError: Invalid Account ID" 
+                    " - IDs can contain 5 chars and all of them must be numbers" << std::endl;
                 }   
             } else if ( input_str.length() == 5 ) {
                 if ( !containsOnlyDigits(input_str)) {
                     cont_dowhile = true;
-                    std::cout << "Please, only digits allowed!!!!" << std::endl;
+                    std::cerr << "\nError: Invalid Account ID - IDs can contain only numbers" << std::endl; 
                 } else {
-                    std::map<std::string, BasicAccount*>::iterator it = allAccountsMap.find(input_str);
-                    if (it != allAccountsMap.end()) 
+                    std::map<std::string, BasicAccount*>::iterator it = accounts.find(input_str);
+                    if (it != accounts.end()) 
                     {
                         std::cout << "READY TO MODIFY ACCOUNT " << input_str << std::endl;
                         (it->second)->getAccountDetails();
@@ -120,204 +120,269 @@ void Banking::modifyAccount() {
     } // if( listAccounts )
 }
 
-void Banking::removeAccount() {
+void Banking::displayAccount() {
     bool cont_dowhile = false;
+
+    if(listAccounts()) {
 
     //collect account id to remove, check if exists
     do
     {
-        std::cout << "Enter account to be removed\n Account ID: " << "\n";
+        std::cout << "\n[ACCOUNT DISPLAY] (press 'q' to cancel)";
+        std::cout << "\nType in account ID > ";
         std::string input_str;
         std::getline(std::cin, input_str);
 
-        if (input_str.length() == 1 ) {
+        if ( input_str.empty() == 1 ) {
+            cont_dowhile = true;
+        } else if (input_str.length() == 1 ) {
             if (input_str.at(0) == 'q') {
                 cont_dowhile = false;
             } else {
                 cont_dowhile = true;
-                std::cout << "The given account ID does not contain five (5) digits." 
-                   "\nTry again (press 'q' to cancel)"  << std::endl;
+                std::cerr << "\nError: Invalid Account ID" 
+                    " - IDs can contain 5 chars and all of them must be numbers" << std::endl;
             }   
         } else if ( input_str.length() == 5 ) {
             if ( !containsOnlyDigits(input_str)) {
                 cont_dowhile = true;
-                std::cout << "Please, only digits allowed!!!!" << std::endl;
+                std::cerr << "\nError: Invalid Account ID - IDs can contain only numbers" << std::endl;
             } else {
-                std::map<std::string, BasicAccount*>::iterator it = allAccountsMap.find(input_str);
-                if (it != allAccountsMap.end()) 
+                accountsMap_t::iterator it = accounts.find(input_str);
+                if (it != accounts.end()) 
                 {
-                    cont_dowhile = false;
-
-                    delete it->second;
-                    allAccountsMap.erase(it);
-
-                    std::cout << "Account (ID) " << it->first << " removed." << std::endl;
+                    std::cout << "[ACCOUNT ID" << it->first << "]"  << std::endl;
+                    (it->second)->getAccountDetails();
+                    //cont_dowhile = false;
+                    //delete it->second;
+                    //accounts.erase(it);
+                    //std::cout << "\nAccount with ID " << it->first << " removed" << std::endl;
 
                 } else {
-                    std::cout << "Account ID " << input_str << " not found, sorry." 
-                        "\nTry again (press 'q' to cancel)." << std::endl;
+                    std::cerr << "\nError: Account ID " << input_str << " not found."; 
                     cont_dowhile = true;
                 }
             }
         } else {
             cont_dowhile = true;
-            std::cout << "The given account ID does not contain five (5) digits."
-               "\nTry again (press 'q' to cancel)" << std::endl;
+            std::cerr << "\nError: Invalid Account ID - IDs are five (5) chars long" << std::endl;
         }
     }
     while(cont_dowhile);
-
+    }
 }
 
-void Banking::collectBasicAccountDetails(int accountType, std::string &account_id, std::string &euros, std::string &cents, std::string &info1, std::string &info2) {
 
+
+void Banking::removeAccount() {
     bool cont_dowhile = false;
 
-    //collect account id and check if reserved
+    if(listAccounts()) {
+
+    //collect account id to remove, check if exists
     do
     {
-        std::cout << "Enter account ID: " << "\n";
+        std::cout << "\n[ACCOUNT REMOVAL] (press 'q' to cancel)";
+        std::cout << "\nType in account ID > ";
+        std::string input_str;
+        std::getline(std::cin, input_str);
+
+        if ( input_str.empty() == 1 ) {
+            cont_dowhile = true;
+        } else if (input_str.length() == 1 ) {
+            if (input_str.at(0) == 'q') {
+                cont_dowhile = false;
+            } else {
+                cont_dowhile = true;
+                std::cerr << "\nError: Invalid Account ID" 
+                    " - IDs can contain 5 chars and all of them must be numbers" << std::endl;
+            }   
+        } else if ( input_str.length() == 5 ) {
+            if ( !containsOnlyDigits(input_str)) {
+                cont_dowhile = true;
+                std::cerr << "\nError: Invalid Account ID - IDs can contain only numbers" << std::endl;
+            } else {
+                accountsMap_t::iterator it = accounts.find(input_str);
+                if (it != accounts.end()) 
+                {
+                    cont_dowhile = false;
+                    delete it->second;
+                    accounts.erase(it);
+                    std::cout << "\nAccount with ID " << it->first << " removed" << std::endl;
+
+                } else {
+                    std::cerr << "\nError: Account ID " << input_str << " not found."; 
+                    cont_dowhile = true;
+                }
+            }
+        } else {
+            cont_dowhile = true;
+            std::cerr << "\nError: Invalid Account ID - IDs are five (5) chars long" << std::endl;
+        }
+    }
+    while(cont_dowhile);
+    }
+}
+
+bool Banking::collectAccountDetails(std::string atype, std::string &account_id, \
+        std::string &euros, std::string &cents, std::string &info1, std::string &info2) {
+
+    bool cont_dowhile = false;
+    bool cancel = false;
+    do
+    {   
+        std::cout << "\n[NEW ACCOUNT] (press 'q' to cancel)";
+        std::cout << "\nType in account ID > ";
         std::string input_str;
         std::getline(std::cin, input_str);
        
-        if ( containsOnlyDigits(input_str) ) {
-            if ( input_str.length() == 5 ) {
-                std::map<std::string, BasicAccount*>::iterator it = allAccountsMap.find(input_str);
-                if (it != allAccountsMap.end()) {
+        if ( input_str.empty() == 1 ) {
+            cont_dowhile = true; 
+        } else if (input_str.length() == 1 ) {
+            if (input_str.at(0) == 'q') {
+                cont_dowhile = false;
+                cancel = true;
+            } else {
+                cont_dowhile = true;
+                std::cerr << "\nError: Invalid Account ID" 
+                    " - IDs can contain 5 chars and all of them must be numbers" << std::endl;
+            }
+        } else if (input_str.length() == 5 ) {
+             if ( !containsOnlyDigits(input_str)) {
+                cont_dowhile = true;
+                std::cerr << "\nError: Invalid Account ID - IDs can contain only numbers" << std::endl;
+            } else {
+                accountsMap_t::iterator it = accounts.find(input_str);
+                if (it != accounts.end()) {
                     cont_dowhile = true;
-                    std::cout << "Account ID reserved, try new ID. " << std::endl;
+                    std::cout << "\nAccount ID" << input_str << " reserved, try new ID. " << std::endl;
                 } else {
                     cont_dowhile = false;
                     account_id = input_str;
-                }
-            } else {
-                cont_dowhile = true;
-                std::cout << "Account ID's length must equal to five (5)" << std::endl;
-            }
-
-        } else {
-            cont_dowhile = true;
-            std::cout << "Account ID must contain only digits (0,1,...,9)" << std::endl;
-        }
-
-    }
-    while(cont_dowhile);
-
-    //collect initial deposit if given
-    do
-    {
-        std::string input_chr;
-        std::cout << "Make an initial deposit? (y/n)" << std::endl;
-        getline(std::cin, input_chr);
-
-        if(input_chr.length() > 1) {
-            std::cout << "Error: Unknown option." << std::endl;
-            cont_dowhile = true;
-        } else {
-            
-            switch(input_chr.at(0)) {
-                case 'y':
+                    
+                    do
                     {
-                        euros = collectEuros();    
-                        cents = collectCents();
+                        std::string input_chr;
+                        std::cout << "\nMake an initial deposit? (press 'q' to cancel)";
+                        std::cout << "\nEnter your option (y/n) > ";
+                        getline(std::cin, input_chr);
 
-                        std::cout << "Deposit (" << euros << " euros " \
-                            << cents << " cents) saved." << std::endl;
-                    break;
+                        if ( input_chr.empty() == 1 ) {
+                            cont_dowhile = true;
+                        } else if (input_chr.length() > 1 ) {
+                            std::cerr << "Error: Unknown option" << std::endl;
+                            cont_dowhile = true;
+                        } else {
+                            if (input_chr.at(0) == 'y') {
+                                euros = collectEuros();
+                                cents = collectCents();
+                            } else if (input_chr.at(0) == 'n') {
+                                cont_dowhile = false;
+                            } else if (input_chr.at(0) == 'q') {
+                                cont_dowhile = false;
+                                cancel = true;
+                            } else {
+                                std::cerr << "Error: Unknown option" << std::endl;
+                                cont_dowhile = true;
+                            }
+                        }
+                        
+
                     }
-                case 'n':
-                    cont_dowhile = false;
-                    break;
-                default:
-                    std::cout << "Error: Unkown option." << "\n";
-                    cont_dowhile = true;
+                    while(cont_dowhile);
+                    
+                    if (!cancel) {
+                        std::string infotype1, infotype2;
+                        if (atype.compare("basic") != 0) {
+                            if (atype.compare("customer") == 0) {
+                                infotype1 = "first name"; infotype2 = "last name";
+                            } else if (atype.compare("enterprise") == 0) {
+                                infotype1 = "business ID"; infotype2 = "company name";
+                            }
+                            std::cout << "Enter " << infotype1 << ": " << std::endl;
+                            std::getline(std::cin, info1);
+                            std::cout << "Enter " << infotype2 << ": " << std::endl;
+                            std::getline(std::cin, info2);
+                        }
+                    }
+                } 
             }
-            
-        }
-
+        
+        } else { 
+            cont_dowhile = true;
+            std::cerr << "\nError: Invalid Account ID - IDs are five (5) chars long" << std::endl;
+        }           
     }
     while(cont_dowhile);
 
-    std::string infotype1, infotype2;
-
-    if (accountType > 0) {
-
-        if (accountType == 1) {
-            infotype1 = "first name"; infotype2 = "last name";
-        } else if (accountType == 2) {
-            infotype1 = "business ID"; infotype2 = "company name";
-        }
-
-        std::cout << "Enter " << infotype1 << ": " << std::endl;
-        std::getline(std::cin, info1);
-
-        std::cout << "Enter " << infotype2 << ": " << std::endl;
-        std::getline(std::cin, info2);
-
-    }
+    return cancel;
 }
 
 void Banking::addAccount() {
- 
+
+    bool cont_dowhile = true; 
     std::string input_chr;
 
     do 
     {
         help_addAccount();
-        std::cout << "Enter your option (b/c/e/q): " << std::endl;
         std::getline(std::cin, input_chr);
 
-        std::string account_id, euros, cents, info1, info2;
-
-        if (input_chr.length() > 1) {
-            help_addAccount();
+        if (input_chr.empty() == 1) {
+            std::cerr << "Error: No option given" << std::endl;
+            cont_dowhile = true;
+        } else if (input_chr.length() > 1) {
+            std::cerr << "Error: Invalid option" << std::endl;
+            cont_dowhile = true;
         } else {
 
+            std::string account_id, info1, info2;
+            std::string euros = "0";
+            std::string cents = "0";
+            BasicAccount* account;
+            
             switch (input_chr.at(0)) {
-                case 'b': 
-                    {
-                    std::cout << "Adding basic account..." << std::endl; 
-                    collectBasicAccountDetails(0, account_id, euros, cents, info1, info2);
-
-                    BasicAccount* baccount = new BasicAccount("basic", account_id, euros, cents);
-                    baccount->getAccountDetails();                    
-                    allAccountsMap.insert(std::pair<std::string, BasicAccount*>(account_id, baccount));
-                    return;
-                    }
-                case 'c':
-                    {
-                    std::cout << "Adding customer account..." << std::endl;
-                    collectBasicAccountDetails(1, account_id, euros, cents, info1, info2);
-
-                    CustomerAccount* caccount = new CustomerAccount("customer", account_id, 
+                case 'b': {
+                    if (!collectAccountDetails("basic", account_id, euros, cents, info1, info2)) {
+                        account = new BasicAccount("basic", account_id, euros, cents);
+                        accounts.insert(std::pair<std::string, BasicAccount*>(account_id, account));
+                        std::cout << "\n[ADDED NEW ACCOUNT]"; 
+                        account->getAccountDetails();
+                    } else {std::cout << "\nProcedure cancelled" << std::endl;}
+                    break;
+                }
+                case 'c': {
+                    if(!collectAccountDetails(std::string("customer"), account_id, euros, cents, info1, info2))                     {
+                        account = new CustomerAccount("customer", account_id, 
                             euros, cents, info1, info2);
-                    caccount->getAccountDetails();                    
-                    allAccountsMap.insert(std::pair<std::string, BasicAccount*>(account_id, caccount));
-                    return;
-                    }
-                case 'e':
-                    {
-                    std::cout << "Adding enterpise account..." << std::endl;
-                    collectBasicAccountDetails(2, account_id, euros, cents, info1, info2);
-
-                    EnterpriseAccount* eaccount = new EnterpriseAccount("enterprise", account_id, 
+                        accounts.insert(std::pair<std::string, BasicAccount*>(account_id, account));
+                        std::cout << "\n[ADDED NEW ACCOUNT]:";
+                        account->getAccountDetails();
+                    } else {std::cout << "\nProceduce cancelled" << std::endl;}
+                    break;
+                }
+                case 'e': {
+                    if(!collectAccountDetails(std::string("enterprise"), account_id, euros, cents, info1, info2)) {
+                        account = new EnterpriseAccount("enterprise", account_id, 
                             euros, cents, info1, info2);
-                    eaccount->getAccountDetails();                    
-                    allAccountsMap.insert(std::pair<std::string, BasicAccount*>(account_id, eaccount));
- 
-                    return;
-                    }
+                        accounts.insert(std::pair<std::string, BasicAccount*>(account_id, account));
+                        std::cout << "\n[ADDED NEW ACCOUNT]";  
+                        account->getAccountDetails(); 
+                    } else {std::cout << "\nProcedure cancelled" << std::endl;}
+                    break;
+                }
                 case 'q':
-                    std::cout << "Canceling account addition..." << std::endl;
+                    cont_dowhile = false;
+                    std::cout << "\nReturn to main menu" << std::endl;
                     break;
                 default:
-                    std::cout << "Error: Unknown option" << std::endl;
+                    std::cout << "\nError: Unknown option" << std::endl;
                     break;
             }
         
         }
     }
-    while(input_chr.at(0)!='q');
+    while(cont_dowhile);
     
 }
 
@@ -331,8 +396,12 @@ int Banking::execute() {
         help();
         std::getline(std::cin, input_str);
 
-        if (input_str.length() > 1) {
-            help();
+        if (input_str.empty() == 1) {
+            std::cerr << "Error: No option given" << std::endl;
+            cont_dowhile = true; 
+        } else if (input_str.length() > 1) {
+            std::cerr << "Error: Invalid option" << std::endl;
+            cont_dowhile = true;
         } else {
             switch (input_str.at(0)) {
                 case 'a':
@@ -344,6 +413,9 @@ int Banking::execute() {
                 case 'l':
                     listAccounts();
                     break;
+                case 'd':
+                    displayAccount();
+                    break;
                 case 'm':
                     modifyAccount();
                     break;
@@ -351,7 +423,7 @@ int Banking::execute() {
                     cont_dowhile = false;
                     break;
                 default:
-                    std::cout << "Error: Unknown option" << std::endl;
+                    std::cout << "Error: Invalid option" << std::endl;
                     break;
             }
         }
@@ -359,12 +431,12 @@ int Banking::execute() {
     while(cont_dowhile);
        
     // Erase everything
-    for (std::vector<BasicAccount*>::iterator it = allAccounts.begin();
+/*    for (std::vector<BasicAccount*>::iterator it = allAccounts.begin();
             it != allAccounts.end(); ) {
         delete *it;
         it = allAccounts.erase(it);
    
-    }
+    }*/
  
     std::cout << "Program terminates...\n";
 
