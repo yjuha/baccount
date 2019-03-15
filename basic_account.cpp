@@ -3,10 +3,11 @@
 #include "basic_account.h"
 #include <map>
 
-void BasicAccount::getAccountDetails() const {
-    std::cout << "\nID " << account_id;
+void BasicAccount::getAccountDetails() {
+    std::cout << "\nID " << objid.get_accountId();
     std::cout << "\nType: " << account_type;
-    std::cout << "\nBalance: " << balance.euros << " euros " << balance.cents << " cents\n";
+    std::cout << "\nBalance: " << balance.euros << " euros " << balance.cents << " cents";
+    std::cout << "\nDate created: " << objid.get_time_created() << std::endl;
 }
 void BasicAccount::modifyBalance(std::string& op) {
     

@@ -1,6 +1,11 @@
 #include "utils.h"
-
 #include <iostream>
+#include <limits>
+
+void Pause() {
+    std::cout << "\nPress ENTER to continue...";
+    std::cin.ignore(std::numeric_limits <std::streamsize> ::max(), '\n' );
+}
 
 bool containsOnlyDigits(std::string& digits) {
 

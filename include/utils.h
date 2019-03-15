@@ -3,6 +3,7 @@
 
 #include <string>
 
+void Pause();
 bool containsOnlyDigits(std::string&);
 std::string collectEuros();
 std::string collectCents();

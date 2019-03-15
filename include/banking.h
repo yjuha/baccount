@@ -16,8 +16,10 @@ class Banking {
     
     //! Helper print function for main menu 
     void help() const;
-    //!Helper print function for addAccount
+    //! Helper print function for account addition
     void help_addAccount() const;
+    //! Helper print function for modify balance
+    void help_modifybalance(std::string&) const;
     //! A function to collect the necessary information to construct an account instance.
      /*!
      *  \param A string reference to tick which kind of information to collect.
@@ -51,7 +53,11 @@ class Banking {
     //! A member to diplay the details of an account
      /*!
      *  ...
-     */ 
+     */
+    int modify(std::string&);
+    int display(std::string&);
+    int remove(std::string&);
+    void selectOp(std::string&); 
     bool listAccounts();
 public:
     //! Default constructor

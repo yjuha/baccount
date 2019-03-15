@@ -5,7 +5,7 @@
 
 class Account {
 public:
-    virtual void getAccountDetails() const = 0;
+    virtual void getAccountDetails() = 0;
 
 };
 
