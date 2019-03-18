@@ -4,6 +4,8 @@
 #include <vector>
 
 #include "banking.h"
+//#include "utils.h"
+
 
 int main(int argc, char** argv) {
 
@@ -19,4 +21,11 @@ int main(int argc, char** argv) {
 
     return instance.execute();
 
+/*    std::string token;
+    std::string mycents;
+    std::string helptext = "\nYour input ";
+    int retval = collectToken(helptext, token);
+    int retval2 = checkDepositAndCollectCents(token, mycents);
+    std::cout << retval2 << " " << mycents << std::endl;
+    return 0;*/
 }

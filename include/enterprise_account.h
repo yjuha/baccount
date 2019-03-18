@@ -1,7 +1,6 @@
 #ifndef ENTERPRISE_ACCOUNT_H_
 #define ENTERPRISE_ACCOUNT_H_
 
-#include "types.h"
 #include "basic_account.h"
 
 class EnterpriseAccount : public BasicAccount
@@ -10,8 +9,8 @@ class EnterpriseAccount : public BasicAccount
     std::string company_name;
         
 public:
-    EnterpriseAccount(string_t atype, string_t aid, string_t e, string_t c, string_t info1, string_t info2) : 
-        business_id(info1), company_name(info2), BasicAccount(atype, aid, e, c) {} 
+    EnterpriseAccount(std::string atype, std::string aid, std::string c, std::string info1, std::string info2) : 
+        business_id(info1), company_name(info2), BasicAccount(atype, aid, c) {} 
     virtual void getAccountDetails();
 };
 

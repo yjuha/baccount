@@ -1,15 +1,14 @@
 #ifndef BALANCE_H_
 #define BALANCE_H_
 
-struct Balance {
-
-    std::string euros;
+class Balance {
+    public:
     std::string cents;
-    Balance(): euros("0"), cents("0") {}
-    Balance(std::string e, std::string c) : euros(e), cents(c) {}
+    Balance(): cents("0") {}
+    Balance(std::string c) : cents(c) {}
 
-    void set_euros(std::string e) {euros = e;}
     void set_cents(std::string c) {cents = c;}
+    std::string get_cents(){return cents;}
 };
 #endif
 
