@@ -12,6 +12,7 @@
 #include <limits>
 #include <vector>
 #include <algorithm>
+#include <cctype>
 
 int checkDepositAndCollectCents(std::string& deposit, std::string& cents) {
 
@@ -139,18 +140,25 @@ void Pause() {
     std::cout << "\nPress ENTER to continue...";
     std::cin.ignore(std::numeric_limits <std::streamsize> ::max(), '\n' );
 }
+/*!
+ * A help function to check that all chars in input string reference are digits
+ *  returns true/false based on success
+ */
+bool containsOnlyDigits(std::string& instr) {
 
-bool containsOnlyDigits(std::string& digits) {
+    bool accept = true;
 
-    int l = digits.length();
-    bool flag = true;
-    for (int i = 0; i < l; ++i) {
-        int digit = static_cast<int>(digits.at(i));
-        if ( digit < 48 || digit > 57 ) {
-            flag = false;
-            break;
-        } 
+    // if the current character is a digit, that's fine
+    for ( unsigned int j = 0; j < instr.length() && accept; ++j )
+    {
+        if (isdigit(instr.at(j)))
+            continue;
+
+        accept = false;
+    
     }
+    
+    return accept;
 
-    return flag;
 }
+
