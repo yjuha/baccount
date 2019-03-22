@@ -1,7 +1,7 @@
 # baccount
 a simple c++ demonstration about input validation in C++, function pointers, virtual methods, inheritance and aggregation
 
-Note: the package has option to do some CPPUTEST unit testing so if you want to try with this option on type
+Note: the package has option to do some CPPUTEST unit testing so if you want to try with this option on do as follows
 
 ```
 mkdir build && cd build
