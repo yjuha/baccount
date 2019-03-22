@@ -161,4 +161,34 @@ bool containsOnlyDigits(std::string& instr) {
     return accept;
 
 }
+/*!
+ *  A helper function to check that the user typed accountId is valid
+ *  return true/false based on success
+ *
+ */
 
+bool isValidAccountId(std::string& accountId, std::string& templateId) {
+    
+    bool accept = true;
+
+    if ( accountId.length() != templateId.length() )
+        return false;
+
+    for ( unsigned int j = 0; j < templateId.length(); j++)
+    {
+        switch(templateId.at(j))
+        {
+            case '#':
+                if ( !isdigit(accountId.at(j)) )
+                    return false;
+                break;
+            default:
+                if ( accountId.at(j) != templateId.at(j) )
+                    return false;                    
+        }    
+    
+    }
+
+    return true;
+
+}

@@ -33,4 +33,14 @@ void Pause();
  */
 bool containsOnlyDigits(std::string&);
 
+//! A utility function to check that an accountId is of a valid form (ruled by templateId)
+/*!
+ *
+ *  @param accountId a string reference of an accountId std::string
+ *  @param templateId a string reference of an templateId std::string
+ *  @return A boolean to flag is valid (true) or not (false)
+ *
+ */
+bool isValidAccountId(std::string& accountId, std::string& templateId);
+
 #endif

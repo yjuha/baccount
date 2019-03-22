@@ -13,7 +13,8 @@ add_executable(${APP} src/main.cpp
                       src/customer_account.cpp 
                       src/basic_account.cpp 
                       src/utils.cpp
-                      src/strmath.cpp)
+                      src/strmath.cpp
+                      src/dbmanager.cpp)
 
 target_include_directories(${APP} PRIVATE ${PROJECT_SOURCE_DIR}/include)
 

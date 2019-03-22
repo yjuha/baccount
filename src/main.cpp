@@ -1,6 +1,5 @@
 #include <iostream>
 #include <cstring>
-
 #include "banking.h"
 
 int main(int argc, char** argv) {
@@ -16,5 +15,4 @@ int main(int argc, char** argv) {
     Banking instance;
 
     return instance.execute();
-
 }

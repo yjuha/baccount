@@ -1,4 +1,5 @@
 #include "banking.h"
+#include "dbmanager.h"
 #include "strmath.h"
 #include "utils.h"
 #include "basic_account.h"
@@ -403,6 +404,21 @@ void Banking::addAccount() {
 }
 
 int Banking::execute() {
+
+    DBManager dbmanager;
+
+    std::vector<std::string> accountIdVec = dbmanager.get_accountIdVec();
+
+    std::vector<std::string>::iterator myit = accountIdVec.begin();
+
+    std::cout << "The database contains the following accounts. " << std::endl;
+    while (myit!=accountIdVec.end()) {
+        std::cout << *myit << std::endl;
+        ++myit;
+    }
+    if ( accountIdVec.begin() == accountIdVec.end() )
+        std::cout << "###EMPTY###" << std::endl;
+
 
     bool cont_dowhile = true;
     std::string input_str;
