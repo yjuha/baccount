@@ -4,6 +4,9 @@ set(APP baccount)
 
 project(${APP})
 
+find_package(Boost 1.58 REQUIRED COMPONENTS
+                filesystem)
+
 set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} -std=c++11)
 
 add_executable(${APP} src/main.cpp 
@@ -17,6 +20,7 @@ add_executable(${APP} src/main.cpp
                       src/dbmanager.cpp)
 
 target_include_directories(${APP} PRIVATE ${PROJECT_SOURCE_DIR}/include)
+target_link_libraries(${APP} Boost::filesystem)
 
 option(COMPILE_TESTS "Compile tests" OFF)
 if(COMPILE_TESTS)
