@@ -8,6 +8,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <ctime>
 
 class BasicAccount : public Account
 {
@@ -18,9 +19,11 @@ protected:
     std::string account_type;
 
 public:
-    BasicAccount(std::string atype, std::string aid, std::string c) : 
-        balance(c), account_type(atype), objid(aid) {}
+    BasicAccount(std::string atype, std::string aid, std::string c, time_t mytime) : 
+        balance(c), account_type(atype), objid(aid, mytime) {}
     virtual void getAccountDetails();
+    virtual std::string getAccountId();
+    virtual bool writeAccountDetailsToFile();
     void modifyBalance(std::string&);
     std::string get_cents() {return balance.cents;}
     void set_cents(std::string cents) {balance.cents=cents;}

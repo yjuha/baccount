@@ -9,3 +9,25 @@ void EnterpriseAccount::getAccountDetails() {
     std::cout << "\nCompany name: " << company_name; 
     std::cout << "\nDate created: " << objid.get_time_created();
 }
+
+bool EnterpriseAccount::writeAccountDetailsToFile() {
+
+    std::string id = objid.get_accountId();
+    const std::string accountfile = "./accounts/" + id;
+    std::ofstream outf(accountfile);
+
+    if (!outf) {
+        std::cerr << "Error: file could not opened for writing" << std::endl;
+        return false;
+    }
+
+    outf << objid.get_accountId() << std::endl;
+    outf << account_type << std::endl;
+    outf << balance.cents << std::endl;
+    outf << business_id << std::endl;
+    outf << company_name << std::endl;
+    outf << objid.get_time_created() << std::endl;
+
+    return true;
+
+}

@@ -22,13 +22,14 @@ class CustomerAccount : public BasicAccount
 
 public:
     //! A constructor
-    CustomerAccount(std::string atype, std::string aid, std::string c, std::string info1, std::string info2) : 
-        firstname(info1), lastname(info2), BasicAccount(atype, aid, c) {}
+    CustomerAccount(std::string atype, std::string aid, std::string c, std::string info1, std::string info2, time_t mytime) : 
+        firstname(info1), lastname(info2), BasicAccount(atype, aid, c, mytime) {}
     /*!
      * a member to print the details of an account
      *
      */
     virtual void getAccountDetails();
+    virtual bool writeAccountDetailsToFile();
 
 };
 

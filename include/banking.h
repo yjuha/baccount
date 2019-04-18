@@ -12,18 +12,23 @@
 #ifndef BANKING_H_
 #define BANKING_H_
 
+#include "dbmanager.h"
+#include "types.h"
+
 #include <string>
 #include <vector>
 #include <map>
+#include <ctime>
 
-class BasicAccount; //forward declaration for BasicAccount class
+//class BasicAccount; //forward declaration for BasicAccount class
 
-typedef std::map<std::string, BasicAccount*> accountsMap_t;
+//typedef std::map<std::string, BasicAccount*> accountsMap_t;
 
 class Banking {
 
     accountsMap_t accounts; /*!< a map with (key, val) =(std::string ACCOUNT_ID, BasicAccount* account) */
- 
+    DBManager* dbmanager;
+
     //! A member print function for app title 
     void printheader() const;    
     //! Helper print function for main menu 
@@ -60,7 +65,7 @@ class Banking {
     //! A member to modify account
     int modify(std::string&);
     //! A member to increase account deposit
-    int increase(std::string&);
+    int deposit(std::string&);
     //! A member to decrease account deposit
     int decrease(std::string&);
     //! A mamber to show account details

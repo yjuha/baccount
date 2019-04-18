@@ -9,9 +9,10 @@ class EnterpriseAccount : public BasicAccount
     std::string company_name;
         
 public:
-    EnterpriseAccount(std::string atype, std::string aid, std::string c, std::string info1, std::string info2) : 
-        business_id(info1), company_name(info2), BasicAccount(atype, aid, c) {} 
+    EnterpriseAccount(std::string atype, std::string aid, std::string c, std::string info1, std::string info2, time_t mytime) : 
+        business_id(info1), company_name(info2), BasicAccount(atype, aid, c, mytime) {} 
     virtual void getAccountDetails();
+    virtual bool writeAccountDetailsToFile();
 };
 
 #endif

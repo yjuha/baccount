@@ -6,6 +6,7 @@
 #include "customer_account.h"
 #include "enterprise_account.h"
 
+#include <boost/filesystem.hpp>
 #include <iostream>
 #include <sstream>
 
@@ -19,11 +20,11 @@ void Banking::help() const {
 
     std::cout << "\n[MAIN MENU]" 
                     "\nOptions:" 
-                    "\na - add an account"
-                    "\nr - remove an account"
-                    "\ni - increase balance"
-                    "\nd - decrease balance" 
-                    "\ns - show account details" 
+                    "\na - add account"
+                    "\nr - remove account"
+                    "\ni - deposit"
+                    "\nd - withdrawal" 
+                    "\ns - show account" 
                     "\nq - quit program\n";
     
     std::cout << "\nEnter your option (a/r/i/d/s/q) > ";
@@ -65,7 +66,7 @@ bool Banking::listAccounts() {
     }
 }
 
-int Banking::increase(std::string& input_str) {
+int Banking::deposit(std::string& input_str) {
     accountsMap_t::iterator it = accounts.find(input_str);
     if (it != accounts.end()) { 
         std::cout << "\n[ACCOUNT ID: " << it->first << "]";
@@ -166,6 +167,7 @@ int Banking::remove(std::string& input_str) {
     if (it != accounts.end()) {
         delete it->second;
         accounts.erase(it);
+        dbmanager->removeAccountFromFile(it->first);
         std::cout << "\n[ACCOUNT ID: " << it->first << "] removed\n";
         return 0;
     } else {
@@ -358,9 +360,10 @@ void Banking::addAccount() {
             switch (input_chr.at(0)) {
                 case 'b': {
                     if (!collectAccountInfo("basic", account_id, cents, info1, info2)) {
-                        account = new BasicAccount("basic", account_id, cents);
+                        account = new BasicAccount("basic", account_id, cents, time(0));
                         accounts.insert(std::pair<std::string, BasicAccount*>(account_id, account));
-                        std::cout << "\n[ADDED NEW ACCOUNT]"; 
+                        dbmanager->writeAccountToFile(account);
+                        std::cout << "\n[ADDED NEW BASIC ACCOUNT]"; 
                         account->getAccountDetails();
                     }
                     Pause();
@@ -369,9 +372,10 @@ void Banking::addAccount() {
                 case 'c': {
                     if(!collectAccountInfo(std::string("customer"), account_id, cents, info1, info2))                     {
                         account = new CustomerAccount("customer", account_id, 
-                            cents, info1, info2);
+                            cents, info1, info2, time(0));
                         accounts.insert(std::pair<std::string, BasicAccount*>(account_id, account));
-                        std::cout << "\n[ADDED NEW ACCOUNT]:";
+                        dbmanager->writeAccountToFile(account);
+                        std::cout << "\n[ADDED NEW CUSTOMER ACCOUNT]:";
                         account->getAccountDetails();
                     }
                     Pause();
@@ -380,9 +384,10 @@ void Banking::addAccount() {
                 case 'e': {
                     if(!collectAccountInfo(std::string("enterprise"), account_id, cents, info1, info2)) {
                         account = new EnterpriseAccount("enterprise", account_id, 
-                            cents, info1, info2);
+                            cents, info1, info2, time(0));
                         accounts.insert(std::pair<std::string, BasicAccount*>(account_id, account));
-                        std::cout << "\n[ADDED NEW ACCOUNT]";  
+                        dbmanager->writeAccountToFile(account);
+                        std::cout << "\n[ADDED NEW ENTERPRISE ACCOUNT]";  
                         account->getAccountDetails(); 
                     }
                     Pause();
@@ -405,26 +410,16 @@ void Banking::addAccount() {
 
 int Banking::execute() {
 
-    DBManager dbmanager;
-
-    std::vector<std::string> accountIdVec = dbmanager.get_accountIdVec();
-
-    std::vector<std::string>::iterator myit = accountIdVec.begin();
-
-    std::cout << "The database contains the following accounts. " << std::endl;
-    while (myit!=accountIdVec.end()) {
-        std::cout << *myit << std::endl;
-        ++myit;
-    }
-    if ( accountIdVec.begin() == accountIdVec.end() )
-        std::cout << "###EMPTY###" << std::endl;
-
+    // Instantiates from the DBManager, and reads accounts from the accountIdDb
+    dbmanager = new DBManager();
+    dbmanager->readAccountInfoFromFile(accounts);
 
     bool cont_dowhile = true;
     std::string input_str;
 
     do 
-    {   printheader();   
+    {   
+        printheader();   
         listAccounts();
         help_collectDeposit();
         help();
@@ -458,8 +453,8 @@ int Banking::execute() {
                     Pause();
                     break;
                 case 'i':
-                    op = "increase";
-                    selectOperation(op, &Banking::increase);
+                    op = "deposit";
+                    selectOperation(op, &Banking::deposit);
                     Pause();
                     break;
                 case 'q':

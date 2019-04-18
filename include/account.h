@@ -22,6 +22,8 @@ public:
      *  @date 17/3/2019
      */
     virtual void getAccountDetails() = 0;
+    virtual std::string getAccountId() = 0;
+    virtual bool writeAccountDetailsToFile() = 0;
 
 };
 
