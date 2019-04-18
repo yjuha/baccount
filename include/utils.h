@@ -11,7 +11,14 @@
 #ifndef UTILS_H_
 #define UTILS_H_
 
+#include <ctime>
+#include <cstdlib>
+#include <cstdio>
 #include <string>
+#include <map>
+
+
+
 /*!
  *
  *
@@ -42,5 +49,12 @@ bool containsOnlyDigits(std::string&);
  *
  */
 bool isValidAccountId(std::string& accountId, std::string& templateId);
+
+int get_month_index(std::string name);
+
+time_t convertTimeString2time_t(std::string timecreated);
+
+
+
 
 #endif

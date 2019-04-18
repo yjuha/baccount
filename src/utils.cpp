@@ -192,3 +192,60 @@ bool isValidAccountId(std::string& accountId, std::string& templateId) {
     return true;
 
 }
+
+int get_month_index( std::string name ) {
+
+    std::map<std::string, int> months
+    {
+        { "Jan", 1 },
+        { "Feb", 2 },
+        { "Mar", 3 },
+        { "Apr", 4 },
+        { "May", 5 },
+        { "Jun", 6 },
+        { "Jul", 7 },
+        { "Aug", 8 },
+        { "Sep", 9 },
+        { "Oct", 10 },
+        { "Nov", 11 },
+        { "Dec", 12 }
+    };
+
+    const auto iter = months.find( name );
+
+    if( iter != months.cend() )
+        return iter->second;
+    return -1;
+}
+
+time_t convertTimeString2time_t( std::string timecreated ) {
+
+    const char* mytimestr = timecreated.c_str();
+
+    char weekday[20];
+    char month[20];
+    int day;
+    int hour;
+    int sec;
+    int min;
+    int year;
+    int month_numeral;
+
+    sscanf(mytimestr, "%s %s %2d %2d:%2d:%2d %4d", weekday, month, &day, &hour, &min, &sec, &year);
+
+    month_numeral = get_month_index(month);
+
+    struct tm timeinfo;
+    timeinfo.tm_year = year - 1900;
+    timeinfo.tm_mon = month_numeral - 1;
+    timeinfo.tm_mday = day;
+    timeinfo.tm_hour = hour;
+    timeinfo.tm_min = min;
+    timeinfo.tm_sec = sec;
+
+    time_t result = mktime(&timeinfo);
+
+    return result;
+}
+
+
