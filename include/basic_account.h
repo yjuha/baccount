@@ -24,6 +24,7 @@ public:
     virtual void getAccountDetails();
     virtual std::string getAccountId();
     virtual bool writeAccountDetailsToFile();
+    virtual void set_timemodified() { objid.set_timemodified(); }
     void modifyBalance(std::string&);
     std::string get_cents() {return balance.cents;}
     void set_cents(std::string cents) {balance.cents=cents;}

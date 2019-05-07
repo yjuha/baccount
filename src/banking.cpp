@@ -96,6 +96,7 @@ int Banking::deposit(std::string& input_str) {
             }
         }
         while(cont_dowhile);
+        (it->second)->set_timemodified(); 
         std::cout << "\n[ACCOUNT ID: " << it->first << "] UPDATED";
         (it->second)->getAccountDetails();
         return 0;
@@ -141,6 +142,7 @@ int Banking::decrease(std::string& input_str) {
             }
         }
         while(cont_dowhile);
+        (it->second)->set_timemodified();
         std::cout << "\n[ACCOUNT ID: " << it->first << "] UPDATED";
         (it->second)->getAccountDetails();} else {std::cout << "\nCurrent balance is 0 euros." << std::endl;}
         return 0;
@@ -354,7 +356,7 @@ void Banking::addAccount() {
         } else {
 
             std::string account_id, info1, info2;
-            std::string cents{3,'0'};
+            std::string cents = "000";
             BasicAccount* account;
             
             switch (input_chr.at(0)) {
